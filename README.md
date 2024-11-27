@@ -5,7 +5,8 @@ En el archivo index.ts, puedes especificar los tipos de las propiedades del obje
 En el archivo actions/index.ts, puedes definir un tipo para la acción, por ejemplo: type Action = { type: string; payload?: any }.
 
 - [] Estilos CSS:
-Los estilos CSS están bien organizados y utilizan correctamente las clases de React.
+  Ponerlos mobile first y usar style components o algo similar, 
+  tambien hacer diseños mas similares a posts de una app normal.
 
 - [] Tests:
 No hay tests integrados en el proyecto, lo que es un tema importante para asegurarse de que tu aplicación funcione correctamente.
