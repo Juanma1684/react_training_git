@@ -34,14 +34,22 @@ const initialState: PostListState = {
     posts: postsDataset,
 }
 
+
+type PostListReducers = {
+    ADD_POST: (state: PostListState, action: PayloadAction<Post>) => void;
+}
+
+
+const postListReducers: PostListReducers = {
+    ADD_POST: (state, action: PayloadAction<Post>) => {
+        state.posts.push(action.payload);
+    },
+}
+
 export const postListSlice = createSlice({
     name: "postList",
     initialState,
-    reducers: {
-        ADD_POST: (state, action: PayloadAction<Post>) => {
-            state.posts.push(action.payload);
-        },
-    },
+    reducers: postListReducers
 })
 
 export const { ADD_POST } = postListSlice.actions;

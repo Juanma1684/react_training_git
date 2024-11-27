@@ -1,50 +1,17 @@
-# React + TypeScript + Vite
+Necesidades  => 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Tipos TypeScript:
+En el archivo index.ts, puedes especificar los tipos de las propiedades del objeto rootReducer para que sean más claras.
+En el archivo actions/index.ts, puedes definir un tipo para la acción, por ejemplo: type Action = { type: string; payload?: any }.
 
-Currently, two official plugins are available:
+Estilos CSS:
+Los estilos CSS están bien organizados y utilizan correctamente las clases de React.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Tests:
+No hay tests integrados en el proyecto, lo que es un tema importante para asegurarse de que tu aplicación funcione correctamente.
 
-## Expanding the ESLint configuration
+Recomendaciones adicionales:
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+Aprovecha las funcionalidades de TypeScript:
+Utiliza los tipos de datos más específicos posibles en tus componentes y acciones.
+Asegúrate de que todos los archivos estén configurados correctamente con tsconfig.json.
