@@ -6,32 +6,15 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { Post } from "../../../models/post/post";
 
 
-const postsDataset = [
-    {
-        name: "Pedro",
-        message: "Felicidades a todos"
-    },
-    {
-        name: "Maria",
-        message: "Tengo ganas de ver a mis hijos pablo y rosa"
-    },
-    {
-        name: "Jose",
-        message: "Hermanos es hora de perdonar"
-    },
-    {
-        name: "Lala",
-        message: "Porque solo yo no tengo pareja joder"
-    }
-] as Post[];
 
-interface PostListState {
+
+export interface PostListState {
     posts: Post[]
 }
 
 
 const initialState: PostListState = {
-    posts: postsDataset,
+    posts: [],
 }
 
 
