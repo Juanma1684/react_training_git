@@ -103,9 +103,6 @@ describe('AddPost component tests', () => {
     expect(btnSubmit).toBeEnabled();
   });
 
-  
-
-
   it('Dispach ADD_POST action with valid name and message payloads', async () => {
 
     render(<AddPost />);
@@ -128,7 +125,6 @@ describe('AddPost component tests', () => {
 
     // when this we check the times (render + re-render) our component is correcly.
     expect(spyUseDispatch).toHaveBeenCalledTimes(4);
-
     expect(dispatchMock.mock.calls[0][0].type).toBe("postList/ADD_POST");
     expect(dispatchMock.mock.calls[0][0].payload.name).toBe("n");
     expect(dispatchMock.mock.calls[0][0].payload.message).toBe("Ñ");
