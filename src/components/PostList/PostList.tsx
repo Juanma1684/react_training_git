@@ -17,9 +17,11 @@ export const PostList = () => {
 
 
     return (
-        <div className="posts">
+        <div className="posts" data-testid="post-list">
             {posts.map(post => (
                 <Post 
+                    postId={post.postId}
+                    key={post.postId}
                     name={post.name} 
                     message={post.message}
                 />
