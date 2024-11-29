@@ -6,10 +6,16 @@ import userEvent from "@testing-library/user-event";
 
 
 
-vi.mock('react-redux', () => ({
-  ...vi.importActual("react-redux"),
-  useDispatch: vi.fn(() => vi.fn((params) => {})),
-}));
+vi.mock('react-redux', () => {
+  const dispatchMock = vi.fn((params) => {})
+  const useDispatchMock = vi.fn(() => dispatchMock)
+  
+  return {
+    ...vi.importActual("react-redux"),
+    useDispatch: useDispatchMock,
+    }
+  }
+);
 
 let spyUseDispatch: any;
 
@@ -28,15 +34,15 @@ describe('AddPost component tests', () => {
 
     const button = screen.getByRole("button");
 
-    const myMock = vi.fn((params) => {})
+    const dispatchMock = vi.fn((params) => {})
+    const useDispatchMock = vi.fn(() => dispatchMock)
 
-    spyUseDispatch.mockImplementation(
-      vi.fn(() => myMock)
-    );
+
+    spyUseDispatch.mockImplementation(useDispatchMock);
 
     await userEvent.click(button);
 
-    expect(myMock).toHaveBeenCalledTimes(0);
+    expect(dispatchMock).toHaveBeenCalledTimes(0);
   });
 
   it("Should inputs have initial state empty string", async () => {
@@ -100,16 +106,15 @@ describe('AddPost component tests', () => {
   
 
 
-  it('Should dispatch ADD_POST action with correct payload', async () => {
+  it('Dispach ADD_POST action with valid name and message payloads', async () => {
 
     render(<AddPost />);
 
     const button = screen.getByRole("button");
-    const myMock = vi.fn((params) => {})
+    const dispatchMock = vi.fn((params) => {})
+    const useDispatchMock = vi.fn(() => dispatchMock)
 
-    spyUseDispatch.mockImplementation(
-      vi.fn(() => myMock)
-    );
+    spyUseDispatch.mockImplementation(useDispatchMock);
 
     const inputName = screen.getByLabelText("Nombre");
     const inputNameText = "n";
@@ -124,25 +129,8 @@ describe('AddPost component tests', () => {
     // when this we check the times (render + re-render) our component is correcly.
     expect(spyUseDispatch).toHaveBeenCalledTimes(4);
 
-    expect(myMock.mock.calls[0][0].type).toBe("postList/ADD_POST");
-    expect(myMock.mock.calls[0][0].payload.name).toBe("n");
-    expect(myMock.mock.calls[0][0].payload.message).toBe("Ñ");
+    expect(dispatchMock.mock.calls[0][0].type).toBe("postList/ADD_POST");
+    expect(dispatchMock.mock.calls[0][0].payload.name).toBe("n");
+    expect(dispatchMock.mock.calls[0][0].payload.message).toBe("Ñ");
   });
-
-
 });
-
-
-
-
-// it('loads data on init', () => {
-//   useDispatch.mockReturnValue(mockedDispatch);
-//   mount(<Router><Clients history={historyMock} /></Router>);
-//   expect(mockDispatch).toHaveBeenCalledWith(/*arguments your expect*/);
-// });
-
-    // const inputName = screen.getByLabelText("Nombre");
-    // const inputMessage = screen.getByLabelText("Mensaje");
-
-    // await userEvent.type(inputName, "pedro");
-    // await userEvent.type(inputMessage, "Hola soy el puto amo");
