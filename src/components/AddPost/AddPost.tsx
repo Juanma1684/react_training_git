@@ -1,33 +1,36 @@
-/*+++ AddPost.tsx*/
-
 import { useDispatch } from "react-redux";
 import { ADD_POST } from "../../redux/reducers/posts/postListSlice";
-import { ChangeEvent, SyntheticEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { PostInput } from "../PostInput/PostInput";
+
 
 export const AddPost = () => {
     
     const [name, setName] = useState("");
     const [message, setMessage] = useState("");
+    const [btnSubmitDisabled, setBtnSubmitDisabled] = useState(true);
     const dispatch = useDispatch();
 
-    const handleAddPost = (event: SyntheticEvent) => {
+    const handleAddPost = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
+        if (btnSubmitDisabled) return;
+
         dispatch(
             ADD_POST({ name, message })
-            
         );
         resetInputs();
     }
 
     const handleNameChange = (event: ChangeEvent<HTMLInputElement>) =>  {
-        //event.isDefaultPrevented();
+        
         setName(event.target.value as string);
+        updateBtnSubmitDisabled(event.target.value, message)
     }
 
     const handleMessageChange = (event: ChangeEvent<HTMLInputElement>) =>  {
-        //event.isDefaultPrevented();
         setMessage(event.target.value as string);
+        updateBtnSubmitDisabled(name, event.target.value); 
     }
 
     const resetInputs = () => {
@@ -35,21 +38,30 @@ export const AddPost = () => {
         setMessage("");
     }
 
+    const updateBtnSubmitDisabled = (name: string, message: string) => {
+        if (name.length > 0 && message.length > 0)
+            setBtnSubmitDisabled(false);
+        else 
+            setBtnSubmitDisabled(true);
+    }
+
 
     return (
         <div>
             <form onSubmit={handleAddPost}>
                 <PostInput
-                label="Nombre"
+                text="Nombre"
+                name="name"
                 value={name}
                 onChange={handleNameChange}
                  />
                 <PostInput
-                label="Mensaje"
+                text="Mensaje"
+                name="message"
                 value={message}
                 onChange={handleMessageChange}
                  />
-                <button type="submit">
+                <button type="submit" disabled={btnSubmitDisabled}>
                     Añadir post
                 </button>
             </form>
