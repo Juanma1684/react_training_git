@@ -17,33 +17,20 @@ vi.mock('react-redux', () => {
   }
 );
 
-let spyUseDispatch: any;
+const setup = () => {
+  const spyUseDispatch = vi.spyOn(reactRedux, "useDispatch");
+  return spyUseDispatch
+}
 
-beforeEach(() => {
-  spyUseDispatch = vi.spyOn(reactRedux, "useDispatch");
-});
+const addFakeDataToInputs = () => {
 
-afterEach(() => {
-  spyUseDispatch.mockReset();
-});
+}
 
 describe('AddPost component tests', () => {
   
-  it('Should when form input is invalid, them submit form not dispatch action', async () => {
-    render(<AddPost />);
-
-    const button = screen.getByRole("button");
-
-    const dispatchMock = vi.fn((params) => {})
-    const useDispatchMock = vi.fn(() => dispatchMock)
-
-
-    spyUseDispatch.mockImplementation(useDispatchMock);
-
-    await userEvent.click(button);
-
-    expect(dispatchMock).toHaveBeenCalledTimes(0);
-  });
+  beforeEach(() => {
+    
+  })
 
   it("Should inputs have initial state empty string", async () => {
     render(<AddPost />);
@@ -101,6 +88,22 @@ describe('AddPost component tests', () => {
     const btnSubmit = screen.getByRole('button');
 
     expect(btnSubmit).toBeEnabled();
+  });
+
+  it('Should when form input is invalid, them submit form not dispatch action', async () => {
+    render(<AddPost />);
+
+    const button = screen.getByRole("button");
+
+    const dispatchMock = vi.fn((params) => {})
+    const useDispatchMock = vi.fn(() => dispatchMock)
+
+
+    spyUseDispatch.mockImplementation(useDispatchMock);
+
+    await userEvent.click(button);
+
+    expect(dispatchMock).toHaveBeenCalledTimes(0);
   });
 
   it('Dispach ADD_POST action with valid name and message payloads', async () => {

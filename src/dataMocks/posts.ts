@@ -1,20 +1,27 @@
 import { Post } from "../models/post/post";
+import Chance from "chance"
+
+const chance = new Chance();
 
 export const POSTS_DATASET = [
     {
-        name: "Pedro",
-        message: "Felicidades a todos"
+        postId: chance.guid(),
+        name: chance.name(),
+        message: chance.paragraph()
     },
     {
-        name: "Maria",
-        message: "Tengo ganas de ver a mis hijos pablo y rosa"
+        postId: chance.guid(),
+        name: chance.name(),
+        message: chance.paragraph()
     },
     {
-        name: "Jose",
-        message: "Hermanos es hora de perdonar"
+        postId: chance.guid(),
+        name: chance.name(),
+        message: chance.paragraph()
     },
     {
-        name: "Lala",
-        message: "Porque solo yo no tengo pareja joder"
+        postId: chance.guid(),
+        name: chance.name(),
+        message: chance.paragraph()
     }
 ] as Post[];

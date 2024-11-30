@@ -1,4 +1,5 @@
 import { useDispatch } from "react-redux";
+import { v4 as uuId } from "uuid";
 import { ADD_POST } from "../../redux/reducers/posts/postListSlice";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { PostInput } from "../PostInput/PostInput";
@@ -17,7 +18,7 @@ export const AddPost = () => {
         if (btnSubmitDisabled) return;
 
         dispatch(
-            ADD_POST({ name, message })
+            ADD_POST({ name, message, postId: uuId()})
         );
         resetInputs();
     }
