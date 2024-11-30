@@ -58,7 +58,6 @@ describe("PostList component tests", () => {
        customPosts = fakePostGenerator(Math.floor(Math.random() * 100) + 1);
     })
 
-    
     it ("When render with useSelector mock with zero posts, then check postList dont have any posts", async () => {
         
         const spyUseSelector = setup();

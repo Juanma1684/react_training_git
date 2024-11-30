@@ -1,83 +1,185 @@
 import { it, expect, describe, vi } from "vitest";
 import { render, screen } from "@testing-library/react"
 import { userEvent } from "@testing-library/user-event";
+import Chance from "chance";
 import { PostInput } from "./PostInput";
 
-describe("PostInput component", () => {
+const chance = new Chance();
+
+const generateFakePostInput = ({ needLabelTextEmpty, needInputIdEmpty, needInputValueEmpty }: 
+    {needLabelTextEmpty: boolean, needInputIdEmpty: boolean, needInputValueEmpty: boolean}) => {
+
+    const postInputDataProps = {
+        labelText: needLabelTextEmpty ? "" : chance.sentence(),
+        inputId: needInputIdEmpty ? "" : chance.name(),
+        inputValue: needInputValueEmpty ?  "" : chance.paragraph(),
+        testId: chance.guid()
+    }
+
+    return postInputDataProps;
+}
+
+const setup = ({ needLabelTextEmpty = false, needInputIdEmpty = false, needInputValueEmpty = false }) => {
+    const dataTestId = chance.guid();
+    const onChange = vi.fn(() => {});
     
-    it("should render with provider props valid, them check the label text is correcly", () => {
+    const postInputDataProps = generateFakePostInput({needLabelTextEmpty, needInputIdEmpty, needInputValueEmpty});
+
+    const postInputEventProps = {
+        onChange
+    }
+
+    return { postInputEventProps, postInputDataProps, dataTestId};
+}
+
+describe("<PostInput/>", () => {
+
+    describe("Rendering", () => {
+
+        describe("Render with empty string props", () => {
+
+            it("Verifies the label text content value have empty string value", async () => {
+                    
+                    const { postInputDataProps, postInputEventProps } = setup({ needLabelTextEmpty: true });
+    
+                    await render(
+                        <PostInput  {...postInputDataProps} onChange={postInputEventProps.onChange} />
+                    );
+    
+                    const postInputHtml = screen.getByTestId(postInputDataProps.testId);
+                    const labelHtml = postInputHtml.children[0];
+    
+                    expect(labelHtml.textContent).toBe("");        
+            })
+
+            it("Verifies the label for attribute have empty string value", async () => {
+            
+                const { postInputDataProps, postInputEventProps } = setup({ needInputIdEmpty: true });
+    
+                await render(
+                    <PostInput  {...postInputDataProps} onChange={postInputEventProps.onChange} />
+                );
+    
+                const postInputHtml = screen.getByTestId(postInputDataProps.testId);
+                const labelHtml = postInputHtml.children[0];
+    
+                expect(labelHtml.getAttribute("for")).toBe("");               
+            })
+    
+    
+            it("Verifies the input value attribute have empty string value", async () => {
+                
+                const { postInputDataProps, postInputEventProps } = setup({ needInputValueEmpty: true });
+    
+                await render(<PostInput  {...postInputDataProps} onChange={postInputEventProps.onChange} />);
+    
+                const postInputHtml = screen.getByTestId(postInputDataProps.testId);
+                const inputHtml = postInputHtml.children[1];
+    
+                expect(inputHtml.getAttribute("value")).toBe("");        
+            })
+    
+            it("Verifies the input id attribute have empty string value", async () => {
+                
+                const { postInputDataProps, postInputEventProps } = setup({ needInputIdEmpty: true });
+    
+                await render(<PostInput  {...postInputDataProps} onChange={postInputEventProps.onChange} />);
+    
+                const postInputHtml = screen.getByTestId(postInputDataProps.testId);
+                const inputHtml = postInputHtml.children[1];
+    
+                expect(inputHtml.getAttribute("id")).toBe("");        
+            })
+    
+            it("Verifies the input name attribute have empty string value", async () => {
+                
+                const { postInputDataProps, postInputEventProps } = setup({ needInputIdEmpty: true });
+                
+                await render(<PostInput  {...postInputDataProps} onChange={postInputEventProps.onChange} />);
+    
+                const postInputHtml = screen.getByTestId(postInputDataProps.testId);
+                const inputHtml = postInputHtml.children[1];
+    
+                expect(inputHtml.getAttribute("name")).toBe("");
+            })
+        })
+
+        describe("Render with random string (never empty) props", () => {
+
+
+            it("Verifies the label display correct label text", async () => {
+                const { postInputDataProps, postInputEventProps } = setup({});
+    
+                await render(<PostInput {...postInputDataProps} onChange={postInputEventProps.onChange} />);
+    
+                const postInputHtml = screen.getByTestId(postInputDataProps.testId);
+                const labelHtml = postInputHtml.children[0];
+    
+                expect(labelHtml.textContent).toBe(postInputDataProps.labelText)
+            })
+    
+                
+            it("Verifies that the label element has an for attribute set to the expected value", async () => {
+                const { postInputDataProps, postInputEventProps } = setup({});
         
-        const props = { text: 'My Label', name: "name", value: 'Hello World!', onChange: () => {} };
+                await render(<PostInput {...postInputDataProps} onChange={postInputEventProps.onChange} />);
         
-        render(<PostInput  {...props} />);
-
-        const htmlLabel = screen.getByText(props.text);
-
-
-        expect(htmlLabel.textContent).toBe(props.text);        
+                const postInputHtml = screen.getByTestId(postInputDataProps.testId);
+                const labelHtml = postInputHtml.children[0];
+        
+                expect(labelHtml.getAttribute("for")).toBe(postInputDataProps.inputId);
+            })
+    
+            it("Verifies that the input element has an id attribute set to the expected value", async () => {
+                const { postInputDataProps, postInputEventProps } = setup({});
+        
+                await render(<PostInput {...postInputDataProps} onChange={postInputEventProps.onChange} />);
+        
+                const postInputHtml = screen.getByTestId(postInputDataProps.testId);
+                const inputHtml = postInputHtml.children[1];
+        
+                expect(inputHtml.getAttribute("id")).toBe(postInputDataProps.inputId);
+            })
+        
+            it("Verifies that the input element has an name attribute set to the expected value", async () => {
+                const { postInputDataProps, postInputEventProps } = setup({});
+        
+                await render(<PostInput {...postInputDataProps} onChange={postInputEventProps.onChange} />);
+        
+                const postInputHtml = screen.getByTestId(postInputDataProps.testId);
+                const inputHtml = postInputHtml.children[1];
+        
+                expect(inputHtml.getAttribute("name")).toBe(postInputDataProps.inputId);
+            })
+        
+            it("Verifies that the input element has an value attribute set to the expected value", async () => {
+                const { postInputDataProps, postInputEventProps } = setup({});
+        
+                await render(<PostInput {...postInputDataProps} onChange={postInputEventProps.onChange} />);
+        
+                const postInputHtml = screen.getByTestId(postInputDataProps.testId);
+                const inputHtml = postInputHtml.children[1];
+        
+                expect(inputHtml.getAttribute("value")).toBe(postInputDataProps.inputValue);
+            })
+        })
     })
 
-    it("should render with provider props with empty string name, then render label has a for attribute equal to an empty string", () => {
-        
-        const props = { text: 'My Label', name: "", value: 'default', onChange: () => {} };
-        
-        render(<PostInput  {...props} />);
-
-        const htmlLabel = screen.queryByLabelText(props.text)
-
-        expect(htmlLabel).toBeNull();        
+    describe("Actions", () => {
+    
+        it("Simulates user typing and verifies onChange is called once per character", async () => {
+            const { postInputDataProps, postInputEventProps } = setup({});
+    
+            await render(<PostInput {...postInputDataProps} onChange={postInputEventProps.onChange} />);
+    
+            const postInputHtml = screen.getByTestId(postInputDataProps.testId);
+            const htmlInput = postInputHtml.children[0];
+    
+            const fakeDataInput = chance.name();
+    
+            await userEvent.type(htmlInput, fakeDataInput)
+    
+            expect(postInputEventProps.onChange).toBeCalledTimes(fakeDataInput.length)
+        });
     })
-
-
-    it("should render with provider props with empty string name, then render input has a name attribute equal to an empty string", () => {
-        
-        const props = { text: 'My Label', name: "", value: 'default', onChange: () => {} };
-        
-        render(<PostInput  {...props} />);
-
-        const htmlLabel = screen.getByRole("textbox");
-
-        expect(htmlLabel.getAttribute("name")).toBe("");
-    })
-
-    it("should render with provider props with empty string name, then render input has a id attribute equal to an empty string", () => {
-        
-        const props = { text: 'My Label', name: "", value: 'default', onChange: () => {} };
-        
-        render(<PostInput  {...props} />);
-
-        const htmlLabel = screen.getByRole("textbox");
-
-        expect(htmlLabel.getAttribute("id")).toBe("");
-    })
-
-    it("should render with provider props with empty string name, has a id attribute equal to an empty string", () => {
-        
-        const props = { text: 'My Label', name: "", value: 'default', onChange: () => {} };
-        
-        render(<PostInput  {...props} />);
-
-        const htmlLabel = screen.getByRole("textbox");
-
-        expect(htmlLabel.getAttribute("id")).toBe("");
-    })
-
-    it("should render with provider props valid, them change input value and check the onChange method called correcly times", async () => {
-        
-        const onChange = () => {
-
-        }
-        
-        const props = { text: 'My Label', name: "email", value: 'federico', onChange: onChange };
-
-        const spyOnChange = vi.spyOn(props, "onChange");
-        
-        render(<PostInput  {...props} />);
-
-        const htmlInput = screen.getByRole("textbox");
-
-        await userEvent.type(htmlInput, 'hellos')
-
-        expect(spyOnChange).toBeCalledTimes(6)
-    })
-})
+});

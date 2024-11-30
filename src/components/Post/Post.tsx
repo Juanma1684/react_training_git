@@ -1,5 +1,3 @@
-/*+++ Post.tsx*/
-
 import "./Post.css"
 
 interface Props {

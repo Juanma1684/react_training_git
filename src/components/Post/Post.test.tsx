@@ -15,8 +15,6 @@ const generateFakePost = () => {
     return post;
 }
 
-
-
 describe("Post component", () => {
     it("should render name and message props provider", () => {
         
@@ -25,11 +23,10 @@ describe("Post component", () => {
         render(<Post {...post} />);
 
         const htmlParagraphs = screen.getAllByRole("paragraph");
-        const divHtml = screen.getByTestId(post.postId);
+        const postHtml = screen.getByTestId(post.postId);
 
-        expect(divHtml.getAttribute("id")).toBe(post.postId)
+        expect(postHtml.getAttribute("id")).toBe(post.postId)
         expect(htmlParagraphs[0].textContent).toBe(post.name);
         expect(htmlParagraphs[1].textContent).toBe(post.message);
     })
-
 })

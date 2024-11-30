@@ -1,13 +1,13 @@
 import { render, screen } from "@testing-library/react"
 import { AddPost } from './AddPost';
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import * as reactRedux from "react-redux";
 import userEvent from "@testing-library/user-event";
 
 
 
 vi.mock('react-redux', () => {
-  const dispatchMock = vi.fn((params) => {})
+  const dispatchMock = vi.fn((props: unknown) => {})
   const useDispatchMock = vi.fn(() => dispatchMock)
   
   return {
@@ -18,12 +18,17 @@ vi.mock('react-redux', () => {
 );
 
 const setup = () => {
-  const spyUseDispatch = vi.spyOn(reactRedux, "useDispatch");
-  return spyUseDispatch
-}
+  const spyUseDispatch = vi.spyOn(reactRedux, "useDispatch") as Mock<() => Mock<(props) => void>>;
+  const dispatchMock = vi.fn((props) => {});
+  const useDispatchMock = vi.fn(() => dispatchMock);
 
-const addFakeDataToInputs = () => {
+  spyUseDispatch.mockImplementation(useDispatchMock);
 
+  return {
+    dispatchMock,
+    useDispatchMock,
+    spyUseDispatch
+  }
 }
 
 describe('AddPost component tests', () => {
@@ -33,7 +38,7 @@ describe('AddPost component tests', () => {
   })
 
   it("Should inputs have initial state empty string", async () => {
-    render(<AddPost />);
+    await render(<AddPost />);
 
     const inputName = screen.getByLabelText("Nombre");
     const inputMessage = screen.getByLabelText("Mensaje");
@@ -43,7 +48,7 @@ describe('AddPost component tests', () => {
   })
 
   it("Should update input name state", async () => {
-    render(<AddPost />);
+    await render(<AddPost />);
 
     const inputName = screen.getByLabelText("Nombre");
     const inputText = "nuevo nombre";
@@ -55,7 +60,7 @@ describe('AddPost component tests', () => {
 
 
   it("Should update input message state", async () => {
-    render(<AddPost />);
+    await render(<AddPost />);
 
     const inputMessage = screen.getByLabelText("Mensaje");
     const inputText = "nuevo mensaje";
@@ -67,7 +72,7 @@ describe('AddPost component tests', () => {
 
 
   it("Should disable submit button when fields are empty", async () => {
-    render(<AddPost />);
+    await render(<AddPost />);
 
     const btnSubmit = screen.getByRole('button');
 
@@ -75,7 +80,7 @@ describe('AddPost component tests', () => {
   })
 
   it("Should enable submit button when fields are not empty", async () => {
-    render(<AddPost />);
+    await render(<AddPost />);
 
     const inputName = screen.getByLabelText("Nombre");
     const inputNameText = "n";
@@ -91,36 +96,30 @@ describe('AddPost component tests', () => {
   });
 
   it('Should when form input is invalid, them submit form not dispatch action', async () => {
-    render(<AddPost />);
+
+    const { dispatchMock } = setup();
+
+    await render(<AddPost />);
 
     const button = screen.getByRole("button");
-
-    const dispatchMock = vi.fn((params) => {})
-    const useDispatchMock = vi.fn(() => dispatchMock)
-
-
-    spyUseDispatch.mockImplementation(useDispatchMock);
 
     await userEvent.click(button);
 
     expect(dispatchMock).toHaveBeenCalledTimes(0);
   });
 
-  it('Dispach ADD_POST action with valid name and message payloads', async () => {
+  it('Dispach ADD_POST action, them check dipatchMock call with correcly props', async () => {
 
-    render(<AddPost />);
+    const { spyUseDispatch, dispatchMock } = setup();
+
+    await render(<AddPost />);
 
     const button = screen.getByRole("button");
-    const dispatchMock = vi.fn((params) => {})
-    const useDispatchMock = vi.fn(() => dispatchMock)
-
-    spyUseDispatch.mockImplementation(useDispatchMock);
-
     const inputName = screen.getByLabelText("Nombre");
-    const inputNameText = "n";
     const inputMessage = screen.getByLabelText("Mensaje");
+    
+    const inputNameText = "n";
     const inputMessageText = "Ñ";
-
 
     await userEvent.type(inputName, inputNameText);
     await userEvent.type(inputMessage, inputMessageText);
@@ -128,7 +127,8 @@ describe('AddPost component tests', () => {
 
     // when this we check the times (render + re-render) our component is correcly.
     expect(spyUseDispatch).toHaveBeenCalledTimes(4);
-    expect(dispatchMock.mock.calls[0][0].type).toBe("postList/ADD_POST");
+    
+    expect((dispatchMock.mock.calls[0][0].type) as string).toBe("postList/ADD_POST");
     expect(dispatchMock.mock.calls[0][0].payload.name).toBe("n");
     expect(dispatchMock.mock.calls[0][0].payload.message).toBe("Ñ");
   });

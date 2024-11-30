@@ -12,6 +12,8 @@
     "test": "vitest",
     "fileTest": "vitest ./src/components/PostList/PostList.test.tsx",
     "fileT": "vitest ./src/components/Post/Post.test.tsx",
+    "P": "vitest ./src/components/PostInput/PostInput.test.tsx",
+    "AddPostTest": "vitest ./src/components/AddPost/AddPost.test.tsx",
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
