@@ -1,5 +1,4 @@
 Necesidades  => 
-
 - [x] Tipos TypeScript:
 En el archivo index.ts, puedes especificar los tipos de las propiedades del objeto rootReducer para que sean más claras.
 En el archivo actions/index.ts, puedes definir un tipo para la acción, por ejemplo: type Action = { type: string; payload?: any }.
