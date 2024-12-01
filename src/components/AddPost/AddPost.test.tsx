@@ -3,6 +3,7 @@ import { AddPost } from './AddPost';
 import { beforeEach, describe, expect, it, Mock, vi } from "vitest";
 import * as reactRedux from "react-redux";
 import userEvent from "@testing-library/user-event";
+import Chance from "chance"
 
 
 /*
@@ -24,35 +25,63 @@ vi.mock('react-redux', () => {
   }
 );
 
+const chance = new Chance();
+
 const setup = () => {
   const spyUseDispatch = vi.spyOn(reactRedux, "useDispatch") as Mock<() => Mock<(props) => void>>;
   const dispatchMock = vi.fn((props) => {});
   const useDispatchMock = vi.fn(() => dispatchMock);
+  const testId = chance.guid();
+
+  const addPostDataProps = { testId };
 
   spyUseDispatch.mockImplementation(useDispatchMock);
 
   return {
     dispatchMock,
     useDispatchMock,
-    spyUseDispatch
+    spyUseDispatch,
+    addPostDataProps,
   }
 }
 
-describe('AddPost component tests', () => {
-  
-  beforeEach(() => {
+describe('<AddPost/>', () => {
+
+  describe("Rendering", () => {
+
+    it("When render verify component exists in the document", async () => {
+      const { addPostDataProps } = setup();
+
+      await render(<AddPost testId={addPostDataProps.testId} />)
+
+      expect(screen.getByTestId(addPostDataProps.testId)).toBeInTheDocument();
+    })
+
+
+      it("Verify name input have initial value of empty string", async () => {
+        const { addPostDataProps } = setup();
+
+        await render(<AddPost testId={addPostDataProps.testId} />)
     
-  })
+        const nameInput = screen.getAllByRole("textbox")[0];
+    
+        expect(nameInput).toHaveAttribute("value", "");
+      })
 
-  it("Should inputs have initial state empty string", async () => {
-    await render(<AddPost />);
+      it("Verify message input have initial value of empty string", async () => {
+        const { addPostDataProps } = setup();
 
-    const inputName = screen.getByLabelText("Nombre");
-    const inputMessage = screen.getByLabelText("Mensaje");
+        await render(<AddPost testId={addPostDataProps.testId} />)
+    
+        const messageInput = screen.getAllByRole("textbox")[1];
+    
+        expect(messageInput).toHaveAttribute("value", "");
+      })
+  });
+  
+  describe("Actions", () => {
 
-    expect(inputName.getAttribute("value")).toBe("");
-    expect(inputMessage.getAttribute("value")).toBe("");
-  })
+  });
 
   it("Should update input name state", async () => {
     await render(<AddPost />);

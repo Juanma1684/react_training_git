@@ -4,8 +4,11 @@ import { ADD_POST } from "../../redux/reducers/posts/postListSlice";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { PostInput } from "../PostInput/PostInput";
 
+interface Props {
+    testId?: string
+}
 
-export const AddPost = () => {
+export const AddPost = ({ testId }: Props) => {
     
     const [name, setName] = useState("");
     const [message, setMessage] = useState("");
@@ -48,7 +51,7 @@ export const AddPost = () => {
 
 
     return (
-        <div>
+        <div data-testid={testId}>
             <form onSubmit={handleAddPost}>
                 <PostInput
                 labelText="Nombre"

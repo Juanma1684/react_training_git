@@ -20,7 +20,6 @@ const generateFakePostInput = ({ needLabelTextEmpty, needInputIdEmpty, needInput
 }
 
 const setup = ({ needLabelTextEmpty = false, needInputIdEmpty = false, needInputValueEmpty = false }) => {
-    const dataTestId = chance.guid();
     const onChange = vi.fn(() => {});
     const onChangeWithProps = vi.fn((event) => {
 
@@ -33,7 +32,7 @@ const setup = ({ needLabelTextEmpty = false, needInputIdEmpty = false, needInput
         onChangeWithProps
     }
 
-    return { postInputEventProps, postInputDataProps, dataTestId};
+    return { postInputEventProps, postInputDataProps};
 }
 
 describe("<PostInput/>", () => {
@@ -67,7 +66,7 @@ describe("<PostInput/>", () => {
                 const postInputHtml = screen.getByTestId(postInputDataProps.testId);
                 const labelHtml = postInputHtml.children[0];
     
-                expect(labelHtml.getAttribute("for")).toBe("");               
+                expect(labelHtml.getAttribute("for")).toBe("");    
             })
     
     
@@ -190,20 +189,20 @@ describe("<PostInput/>", () => {
 
 
 
-        // it("Simulates user typing and verifies onChange is called with expect parameter", async () => {
-        //     const { postInputDataProps, postInputEventProps } = setup({ needInputIdEmpty: true, needInputValueEmpty: true, needLabelTextEmpty: true});
-            
-        //     await render(<PostInput {...postInputDataProps} onChange={postInputEventProps.onChangeWithProps} />);
+// it("Simulates user typing and verifies onChange is called with expect parameter", async () => {
+//     const { postInputDataProps, postInputEventProps } = setup({ needInputIdEmpty: true, needInputValueEmpty: true, needLabelTextEmpty: true});
     
-        //     const postInputHtml = screen.getByTestId(postInputDataProps.testId);
-        //     const htmlInput = postInputHtml.children[1];
+//     await render(<PostInput {...postInputDataProps} onChange={postInputEventProps.onChangeWithProps} />);
+
+//     const postInputHtml = screen.getByTestId(postInputDataProps.testId);
+//     const htmlInput = postInputHtml.children[1];
+
+//     // Simulate user typing
+//     const fakeDataInput = "Babas";
+//     await vi.fn(() => {
+//         postInputEventProps.onChangeWithProps({ target: { value: fakeDataInput } });
+//     });
+//     // await userEvent.type(htmlInput, fakeDataInput)
     
-        //     // Simulate user typing
-        //     const fakeDataInput = "Babas";
-        //     await vi.fn(() => {
-        //         postInputEventProps.onChangeWithProps({ target: { value: fakeDataInput } });
-        //     });
-        //     // await userEvent.type(htmlInput, fakeDataInput)
-            
-        //     expect(postInputEventProps.onChangeWithProps).toHaveBeenCalledWith(expect.objectContaining({ target: { value: "Babas" } }));
-        // });
+//     expect(postInputEventProps.onChangeWithProps).toHaveBeenCalledWith(expect.objectContaining({ target: { value: "Babas" } }));
+// });

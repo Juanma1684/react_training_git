@@ -8,15 +8,32 @@ const chance = new Chance();
 
 const generateFakePost = ({ postIdEmpty = false, nameEmpty = false, messageEmpty = false}: {postIdEmpty?: boolean, nameEmpty?: boolean, messageEmpty?: boolean}) => {
     
-    const testId = chance.guid();
-    
-    const postPropsData: IPost = {
+    const postDataProps: IPost & { testId: string} = {
         postId: postIdEmpty ? "" : chance.guid(),
         name: nameEmpty ? "" : chance.name(),
         message: messageEmpty ? "" : chance.paragraph(),
+        testId: chance.guid()
     }
-    return { postPropsData, testId} ;
+    return { postDataProps } ;
 }
+
+/**
+  * Testing utlity function
+  * @param testId The id to search element in the screen.
+  */
+const verifyPostExistInTheDocument = (testId: string) => {
+    expect(screen.queryByTestId(testId)).toHaveAttribute("data-testid", testId);
+}
+
+/**
+  * Testing utlity function
+  * @param element The element in document to verify.
+  * @param text The text content to element have expect.
+  */
+const verifyElementToHaveTextContent = (element: Element, text: string) => {
+    expect(element).toHaveTextContent(text);
+}
+
 
 describe("<Post", () => {
 
@@ -24,41 +41,41 @@ describe("<Post", () => {
 
         describe("With empty string props", () => {
             it ("Verify post exists in the document", async () => {
-                const { postPropsData, testId } = generateFakePost({ postIdEmpty: true, nameEmpty: true, messageEmpty: true });
+                const { postDataProps } = generateFakePost({ postIdEmpty: true, nameEmpty: true, messageEmpty: true });
 
-                await render( <Post {...postPropsData} testId={testId} />)
+                await render( <Post {...postDataProps} testId={postDataProps.testId} />)
                 
-                expect(screen.queryByTestId(testId)).toHaveAttribute("data-testid", testId);
+                verifyPostExistInTheDocument(postDataProps.testId);
             })
 
             it ("Verify name paragraph exists and has correct text content that is empty string", async () => {
-                const { postPropsData, testId } = generateFakePost({ postIdEmpty: true, nameEmpty: true, messageEmpty: true });
+               const { postDataProps } = generateFakePost({ postIdEmpty: true, nameEmpty: true, messageEmpty: true });
 
-                await render( <Post {...postPropsData} testId={testId} />)
+                await render( <Post {...postDataProps} testId={postDataProps.testId} />)
 
-                const postElement = screen.getByTestId(testId);
+                const postElement = screen.getByTestId(postDataProps.testId);
                 const nameParagraphElement = postElement.children[0];
 
-                expect(nameParagraphElement).toHaveTextContent("");
+                verifyElementToHaveTextContent(nameParagraphElement, "");
             })
 
             it ("Verify message paragraph exists and has correct text content that is empty string", async () => {
-                const { postPropsData, testId } = generateFakePost({ postIdEmpty: true, nameEmpty: true, messageEmpty: true });
+               const { postDataProps } = generateFakePost({ postIdEmpty: true, nameEmpty: true, messageEmpty: true });
 
-                await render( <Post {...postPropsData} testId={testId} />)
+                await render( <Post {...postDataProps} testId={postDataProps.testId} />)
 
-                const postElement = screen.getByTestId(testId);
+                const postElement = screen.getByTestId(postDataProps.testId);
                 const messageParagraphElement = postElement.children[1];
 
-                expect(messageParagraphElement).toHaveTextContent("");
+                verifyElementToHaveTextContent(messageParagraphElement, "")
             })
 
             it ("Verify div have id attribute value is empty string", async () => {
-                const { postPropsData, testId } = generateFakePost({ postIdEmpty: true, nameEmpty: true, messageEmpty: true });
+               const { postDataProps } = generateFakePost({ postIdEmpty: true, nameEmpty: true, messageEmpty: true });
 
-                await render( <Post {...postPropsData} testId={testId} />)
+                await render( <Post {...postDataProps} testId={postDataProps.testId} />)
 
-                const postElement = screen.getByTestId(testId);
+                const postElement = screen.getByTestId(postDataProps.testId);
 
                 expect(postElement).toHaveAttribute("id", "");
             })
@@ -66,43 +83,43 @@ describe("<Post", () => {
 
         describe("With random string props (never empty string)", () => {
             it ("Verify post exists in the document", async () => {
-                const { postPropsData, testId } = generateFakePost({});
+               const { postDataProps } = generateFakePost({});
     
-                await render( <Post {...postPropsData} testId={testId} />);
+                await render( <Post {...postDataProps} testId={postDataProps.testId} />);
     
-                expect(screen.queryByTestId(testId)).toHaveAttribute("data-testid", testId);
+                verifyPostExistInTheDocument(postDataProps.testId)
             })
 
             it("Verify name paragraph exists and has correct text content matching the expected post name", async () => {
-                const { postPropsData, testId } = generateFakePost({});
+               const { postDataProps } = generateFakePost({});
 
-                await render( <Post {...postPropsData} testId={testId} />);
+                await render( <Post {...postDataProps} testId={postDataProps.testId} />);
 
-                const postElement = screen.getByTestId(testId);
+                const postElement = screen.getByTestId(postDataProps.testId);
                 const nameParagraphElement = postElement.children[0];
 
-                expect(nameParagraphElement).toHaveTextContent(postPropsData.name);
+                verifyElementToHaveTextContent(nameParagraphElement, postDataProps.name);
             })
             
             it("Verify message paragraph exists and has correct text content matching the expected post message", async () => {
-                const { postPropsData, testId } = generateFakePost({});
+               const { postDataProps } = generateFakePost({});
 
-                await render( <Post {...postPropsData} testId={testId} />);
+                await render( <Post {...postDataProps} testId={postDataProps.testId} />);
 
-                const postElement = screen.getByTestId(testId);
+                const postElement = screen.getByTestId(postDataProps.testId);
                 const messageParagraphElement = postElement.children[1];
 
-                expect(messageParagraphElement).toHaveTextContent(postPropsData.message);
+                verifyElementToHaveTextContent(messageParagraphElement, postDataProps.message);
             })
 
             it("Verify div have id attribute value matches the expected postId", async () => {
-                const { postPropsData, testId } = generateFakePost({});
+               const { postDataProps } = generateFakePost({});
 
-                await render( <Post {...postPropsData} testId={testId} />);
+                await render( <Post {...postDataProps} testId={postDataProps.testId} />);
 
-                const postElement = screen.getByTestId(testId);
+                const postElement = screen.getByTestId(postDataProps.testId);
 
-                expect(postElement).toHaveAttribute("id", postPropsData.postId)
+                expect(postElement).toHaveAttribute("id", postDataProps.postId)
             })
         })
 
