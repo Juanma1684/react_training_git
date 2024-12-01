@@ -4,8 +4,8 @@ interface Props {
     labelText: string;
     inputId: string;
     inputValue: string;
-    testId?: string;
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    testId?: string;
 }
 
 export const PostInput = ({ labelText, inputId, inputValue, testId, onChange}: Props) => {

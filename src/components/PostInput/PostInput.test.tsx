@@ -22,18 +22,22 @@ const generateFakePostInput = ({ needLabelTextEmpty, needInputIdEmpty, needInput
 const setup = ({ needLabelTextEmpty = false, needInputIdEmpty = false, needInputValueEmpty = false }) => {
     const dataTestId = chance.guid();
     const onChange = vi.fn(() => {});
+    const onChangeWithProps = vi.fn((event) => {
+
+    })
     
     const postInputDataProps = generateFakePostInput({needLabelTextEmpty, needInputIdEmpty, needInputValueEmpty});
 
     const postInputEventProps = {
-        onChange
+        onChange,
+        onChangeWithProps
     }
 
     return { postInputEventProps, postInputDataProps, dataTestId};
 }
 
 describe("<PostInput/>", () => {
-
+    
     describe("Rendering", () => {
 
         describe("Render with empty string props", () => {
@@ -173,7 +177,7 @@ describe("<PostInput/>", () => {
             await render(<PostInput {...postInputDataProps} onChange={postInputEventProps.onChange} />);
     
             const postInputHtml = screen.getByTestId(postInputDataProps.testId);
-            const htmlInput = postInputHtml.children[0];
+            const htmlInput = postInputHtml.children[1];
     
             const fakeDataInput = chance.name();
     
@@ -183,3 +187,23 @@ describe("<PostInput/>", () => {
         });
     })
 });
+
+
+
+        // it("Simulates user typing and verifies onChange is called with expect parameter", async () => {
+        //     const { postInputDataProps, postInputEventProps } = setup({ needInputIdEmpty: true, needInputValueEmpty: true, needLabelTextEmpty: true});
+            
+        //     await render(<PostInput {...postInputDataProps} onChange={postInputEventProps.onChangeWithProps} />);
+    
+        //     const postInputHtml = screen.getByTestId(postInputDataProps.testId);
+        //     const htmlInput = postInputHtml.children[1];
+    
+        //     // Simulate user typing
+        //     const fakeDataInput = "Babas";
+        //     await vi.fn(() => {
+        //         postInputEventProps.onChangeWithProps({ target: { value: fakeDataInput } });
+        //     });
+        //     // await userEvent.type(htmlInput, fakeDataInput)
+            
+        //     expect(postInputEventProps.onChangeWithProps).toHaveBeenCalledWith(expect.objectContaining({ target: { value: "Babas" } }));
+        // });

@@ -51,15 +51,15 @@ export const AddPost = () => {
         <div>
             <form onSubmit={handleAddPost}>
                 <PostInput
-                text="Nombre"
-                name="name"
-                value={name}
+                labelText="Nombre"
+                inputId="name"
+                inputValue={name}
                 onChange={handleNameChange}
                  />
                 <PostInput
-                text="Mensaje"
-                name="message"
-                value={message}
+                labelText="Mensaje"
+                inputId="message"
+                inputValue={message}
                 onChange={handleMessageChange}
                  />
                 <button type="submit" disabled={btnSubmitDisabled}>
