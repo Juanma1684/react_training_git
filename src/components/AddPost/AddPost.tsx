@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { ADD_POST } from "../../redux/reducers/posts/postListSlice";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { PostInput } from "../PostInput/PostInput";
 
 
@@ -10,6 +10,12 @@ export const AddPost = () => {
     const [message, setMessage] = useState("");
     const [btnSubmitDisabled, setBtnSubmitDisabled] = useState(true);
     const dispatch = useDispatch();
+
+    const counter = useRef(0);
+
+    useEffect(() => {
+        counter.current++;
+    })
 
     const handleAddPost = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -48,6 +54,7 @@ export const AddPost = () => {
 
     return (
         <div>
+            <h1>Renders: {counter.current}</h1>
             <form onSubmit={handleAddPost}>
                 <PostInput
                 text="Nombre"
