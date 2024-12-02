@@ -11,13 +11,13 @@ interface Props {
 
 export const AddPost = ({ testId, subTestId }: Props) => {
     
-    const nameInputRef = useRef<HTMLInputElement | null>();
-    const messageInputRef = useRef<HTMLInputElement | null>();
-    const counterTesting = useRef<number>(0);
+    const nameInputRef = useRef<HTMLInputElement | null>(null);
+    const messageInputRef = useRef<HTMLInputElement | null>(null);
+    const counterRerenders = useRef<number>(0);
 
 
     useEffect(() => {
-        counterTesting.current++;
+        counterRerenders.current++;
     });
 
     const dispatch = useDispatch();
@@ -37,7 +37,8 @@ export const AddPost = ({ testId, subTestId }: Props) => {
             ADD_POST({ name: enteredName, message: enteredMessage, postId: uuId()})
         );
 
-
+        nameInputRef.current.value = "";
+        messageInputRef.current.value = "";
     }   
 
     const validateForm = (name: string, message: string) => {
@@ -46,10 +47,9 @@ export const AddPost = ({ testId, subTestId }: Props) => {
         return false;
     }
 
-
     return (
         <div data-testid={testId}>
-            <h1>Renders: {counterTesting.current}</h1>
+            <h1>Renders: {counterRerenders.current}</h1>
             <form onSubmit={handleAddPost}>
                 <PostInput
                 labelText="Nombre"

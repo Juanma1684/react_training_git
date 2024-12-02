@@ -6,7 +6,7 @@ interface Props {
     testId?: string;
 }
 
-export const PostInput = forwardRef(({ labelText, inputId,  testId }: Props, ref: Ref<HTMLInputElement> ) => {
+export const PostInput = forwardRef(({ labelText, inputId,  testId = "" }: Props, ref: Ref<HTMLInputElement> ) => {
 
     return (
         <div data-testid={testId}>
@@ -19,5 +19,5 @@ export const PostInput = forwardRef(({ labelText, inputId,  testId }: Props, ref
                 required
             />
         </div>
-    )
-})
+    );
+});
