@@ -9,7 +9,7 @@ interface Props {
     subTestId?: string;
 }
 
-export const AddPost = ({ testId, subTestId }: Props) => {
+export const AddPost = ({ testId = "", subTestId = "" }: Props) => {
     
     const nameInputRef = useRef<HTMLInputElement | null>(null);
     const messageInputRef = useRef<HTMLInputElement | null>(null);
