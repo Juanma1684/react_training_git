@@ -1,26 +1,23 @@
-import { ChangeEvent } from "react";
+import { forwardRef, Ref } from "react";
 
 interface Props {
     labelText: string;
     inputId: string;
-    inputValue: string;
-    onChange: (event: ChangeEvent<HTMLInputElement>) => void;
     testId?: string;
 }
 
-export const PostInput = ({ labelText, inputId, inputValue, testId, onChange}: Props) => {
+export const PostInput = forwardRef(({ labelText, inputId,  testId }: Props, ref: Ref<HTMLInputElement> ) => {
 
     return (
         <div data-testid={testId}>
-            <label htmlFor={inputId ? inputId : ""}>{labelText}</label>
+            <label htmlFor={inputId}>{labelText}</label>
             <input 
                 type="text"
                 name={inputId}
                 id={inputId}
-                value={inputValue} 
-                // placeholder={inputValue}
-                onChange={onChange} 
+                ref={ref}
+                required
             />
         </div>
     )
-}
+})

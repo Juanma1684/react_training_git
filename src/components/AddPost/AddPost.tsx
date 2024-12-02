@@ -1,71 +1,69 @@
 import { useDispatch } from "react-redux";
 import { v4 as uuId } from "uuid";
 import { ADD_POST } from "../../redux/reducers/posts/postListSlice";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef } from "react";
 import { PostInput } from "../PostInput/PostInput";
 
 interface Props {
     testId?: string
+    subTestId?: string;
 }
 
-export const AddPost = ({ testId }: Props) => {
+export const AddPost = ({ testId, subTestId }: Props) => {
     
-    const [name, setName] = useState("");
-    const [message, setMessage] = useState("");
-    const [btnSubmitDisabled, setBtnSubmitDisabled] = useState(true);
+    const nameInputRef = useRef<HTMLInputElement | null>();
+    const messageInputRef = useRef<HTMLInputElement | null>();
+    const counterTesting = useRef<number>(0);
+
+
+    useEffect(() => {
+        counterTesting.current++;
+    });
+
     const dispatch = useDispatch();
 
     const handleAddPost = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        if (btnSubmitDisabled) return;
+        if (!nameInputRef.current || !messageInputRef.current) return;
+
+        const enteredName = nameInputRef.current.value;
+        const enteredMessage = messageInputRef.current.value;
+
+
+        if (!validateForm(enteredName, enteredMessage)) return;
 
         dispatch(
-            ADD_POST({ name, message, postId: uuId()})
+            ADD_POST({ name: enteredName, message: enteredMessage, postId: uuId()})
         );
-        resetInputs();
-    }
 
-    const handleNameChange = (event: ChangeEvent<HTMLInputElement>) =>  {
-        
-        setName(event.target.value as string);
-        updateBtnSubmitDisabled(event.target.value, message)
-    }
 
-    const handleMessageChange = (event: ChangeEvent<HTMLInputElement>) =>  {
-        setMessage(event.target.value as string);
-        updateBtnSubmitDisabled(name, event.target.value); 
-    }
+    }   
 
-    const resetInputs = () => {
-        setName("");
-        setMessage("");
-    }
-
-    const updateBtnSubmitDisabled = (name: string, message: string) => {
+    const validateForm = (name: string, message: string) => {
         if (name.length > 0 && message.length > 0)
-            setBtnSubmitDisabled(false);
-        else 
-            setBtnSubmitDisabled(true);
+            return true;
+        return false;
     }
 
 
     return (
         <div data-testid={testId}>
+            <h1>Renders: {counterTesting.current}</h1>
             <form onSubmit={handleAddPost}>
                 <PostInput
                 labelText="Nombre"
                 inputId="name"
-                inputValue={name}
-                onChange={handleNameChange}
+                testId={subTestId}
+                ref={nameInputRef}
                  />
                 <PostInput
                 labelText="Mensaje"
                 inputId="message"
-                inputValue={message}
-                onChange={handleMessageChange}
+                ref={messageInputRef}
+                testId={subTestId}
                  />
-                <button type="submit" disabled={btnSubmitDisabled}>
+                <button type="submit">
                     Añadir post
                 </button>
             </form>

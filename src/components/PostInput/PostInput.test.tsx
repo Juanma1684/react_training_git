@@ -170,20 +170,20 @@ describe("<PostInput/>", () => {
 
     describe("Actions", () => {
     
-        it("Simulates user typing and verifies onChange is called once per character", async () => {
-            const { postInputDataProps, postInputEventProps } = setup({});
+        // it("Simulates user typing and verifies onChange is called once per character", async () => {
+        //     const { postInputDataProps, postInputEventProps } = setup({});
     
-            await render(<PostInput {...postInputDataProps} onChange={postInputEventProps.onChange} />);
+        //     await render(<PostInput {...postInputDataProps} onChange={postInputEventProps.onChange} />);
     
-            const postInputHtml = screen.getByTestId(postInputDataProps.testId);
-            const htmlInput = postInputHtml.children[1];
+        //     const postInputHtml = screen.getByTestId(postInputDataProps.testId);
+        //     const htmlInput = postInputHtml.children[1];
     
-            const fakeDataInput = chance.name();
+        //     const fakeDataInput = chance.name();
     
-            await userEvent.type(htmlInput, fakeDataInput)
+        //     await userEvent.type(htmlInput, fakeDataInput)
     
-            expect(postInputEventProps.onChange).toBeCalledTimes(fakeDataInput.length)
-        });
+        //     expect(postInputEventProps.onChange).toBeCalledTimes(fakeDataInput.length)
+        // });
     })
 });
 
